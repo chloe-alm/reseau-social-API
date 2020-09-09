@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js",
     "migration:reload": "sequelize db:migrate:undo:all && sequelize db:migrate",
-    "seed:reload": "sequelize db:seed:undo:all && sequelize db:seed"
+    "seed:reload": "sequelize db:seed:undo:all && sequelize db:seed:all"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/chloe-alm/reseau-social-API#readme",
   "devDependencies": {
-    "mysql-db-seed": "0.0.4",
     "nodemon": "^2.0.4",
     "sequelize-cli": "^6.2.0"
   },

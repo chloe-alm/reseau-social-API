@@ -14,13 +14,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   User.init({
-    firstName: {type:DataTypes.STRING, allowNull:false},
-    lastName: {type: DataTypes.STRING, allowNull:false},
-    email: {type: DataTypes.STRING, allowNull:false},
-    password:{type: DataTypes.STRING, allowNull:false},
-    birthdate:{type: DataTypes.DATE, allowNull:false},
-    attachment: {type: Sequelize.STRING, allowNull:false},
-    country:{type: DataTypes.STRING, allowNull:false},
+    firstName:{type: DataTypes.STRING, allowNull: false},
+    lastName: {type: DataTypes.STRING, allowNull: false},
+    email:{type: DataTypes.STRING, allowNull: false},
+    password:{type: DataTypes.STRING, allowNull: false},
+    birthday: {type: DataTypes.DATE, allowNull: false},
+    country: {type: DataTypes.STRING, allowNull: false},
+    picture: {type: DataTypes.STRING, allowNull: true},
   }, {
     sequelize,
     modelName: 'User',

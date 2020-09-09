@@ -24,7 +24,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      birthdate: {
+      birthday: {
         allowNull: false,
         type: Sequelize.DATE
       },
@@ -32,7 +32,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      attachment: {
+      picture: {
         type: Sequelize.STRING
       },
       createdAt: {
