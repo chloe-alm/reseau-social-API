@@ -2,10 +2,25 @@
   "development": {
     "username": "root",
     "password": "root",
-    "database": "reseausocial_development",
+    "database": "reseauSocial_development",
     "host": "127.0.0.1",
-    "port":"8889",
+    "port": "8889",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": "root",
+    "database": "reseauSocial_test",
+    "host": "127.0.0.1",
+    "port": "8889",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "root",
+    "database": "reseauSocial_production",
+    "host": "127.0.0.1",
+    "port": "8889",
     "dialect": "mysql"
   }
 }
- 
