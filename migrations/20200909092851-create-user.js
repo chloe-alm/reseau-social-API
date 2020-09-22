@@ -25,8 +25,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       birthday: {
-        allowNull: false,
-        type: Sequelize.DATE
+        allowNull: true,
+        type: Sequelize.DATEONLY
       },
       country: {
         allowNull: false,

@@ -1,12 +1,19 @@
-const express =require("express");
-const { register } = require("./users");
+const express = require("express");
+const bodyParser = require('body-parser');
+const router = express.Router();
+const registerRouter = require('../routes/registerRouter');
+const { request, response } = require("express");
 
-exports.router = (() => {
-    const apiRouter = express.Router();
+router.use(bodyParser.json())
 
-    apiRouter.route("/users").post(register);
+//route page d accueil
+router.get('/api',(request,response)=>{
+    response.json({message: 'Page d\'accueil'});
+})
 
-    return apiRouter;
-})();
+router.use('/api',registerRouter)
+
+module.exports = router
+
 
 

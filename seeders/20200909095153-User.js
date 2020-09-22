@@ -25,7 +25,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
    await queryInterface.bulkInsert(
      "Users",
-     generateUsers(50),
+     generateUsers(10),
      {}
    );
   },

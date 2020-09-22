@@ -9,15 +9,19 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       title: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       content: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       attachement: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       like: {
+        allowNull: true,
         type: Sequelize.INTEGER
       },
       createdAt: {

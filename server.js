@@ -1,10 +1,10 @@
 const { config } = require("dotenv");
-config(); // dotenv.config()
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const helmet = require("helmet");
-const { router } = require("./routes");
+const router = require("./routes");
 
 const app = express();
 const PORT = process.env.PORT;
@@ -19,6 +19,6 @@ app.get("/", (req, res) => {
   res.send("Bienvenue sur ce reseau social");
 });
 
-app.use("/api/", router);
+app.use(router);
 
 app.listen(PORT, () => console.log(`Server started on port: ${PORT}`));
