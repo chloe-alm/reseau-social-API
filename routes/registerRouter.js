@@ -1,16 +1,11 @@
-const { request, response } = require('express');
 const express = require('express');
 
 const registerRouter = express.Router();
-const userController = require('../controllers/users');
+const userController = require('../controllers/userController');
 
-//route get 
-
-registerRouter.get('/register',(request,response)=>{
-    response.json({message:'register'})
+registerRouter.get('/register',(req,res)=>{
+    res.json({message:'register'})
 })
-
-//route post
 
 registerRouter.post('/register',userController.register);
 module.exports = registerRouter

@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const jwtUtils = require('../utils/jwt.utils');
 
 
+
 module.exports = {
     register: (req,res) => {
         const {firstName,lastName,email,password,country,birthday,picture} = req.body;
@@ -41,25 +42,26 @@ module.exports = {
               return res.status(500).json(err);
             });
         },
-        login:(req,res)=> {
+        login: async (req,res)=> {
           const user = {
             email:req.body.email,
             password:req.body.password,
           }
-          if(user.email == null || user.password == null){
+          if(user.email === null || user.password === null){
             return res.status(400).json({
               'error':'veuillez remplir tous les champs'
             })
           }
-          const match = models.User.findOne({
+          const match = await models.User.findOne({
             attributes:[
               'email',
               'password'
             ],
-            where:{
+            where: {
               email:user.email
-            }
+            },
           })
+          console.log(match)
           if(match){
             bcrypt.compare(user.password,match.password,(error,resBcrypt)=>{
               if(resBcrypt){
