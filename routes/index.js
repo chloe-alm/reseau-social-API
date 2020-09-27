@@ -1,20 +1,19 @@
 const express = require("express");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 const router = express.Router();
-const registerRouter = require('../routes/registerRouter');
-const loginRouter = require('../routes/loginRouter');
 
-router.use(bodyParser.json())
+const userController = require("../controllers/userController");
+const postController = require("../controllers/postController");
+const { response } = require("express");
 
-//route page d accueil
-router.get('/api',(req,res)=>{
-    res.json({message: 'Page d\'accueil'});
-})
+router.use(bodyParser.json());
 
-router.use('/api',registerRouter)
-router.use('/api',loginRouter)
+// USER ROUTES
+router.post("/login", userController.login);
+router.post("/register", userController.register);
 
-module.exports = router
+// POST ROUTES
+router.post("/posts",postController.createPost);
+// router.get("/posts/:id",postController.getById);
 
-
-
+module.exports = router;
