@@ -13,7 +13,7 @@ const generatePost = (postNumber)=>{
 
   for (let i= 0; i< postNumber; i++) {
     const post = {
-      content:faker.lorem.paragraph(3),
+      content:faker.lorem.paragraph(2),
       like:faker.random.number(50),
       picture:faker.image.nature(),
       userId:getRandomInt(1,10),
@@ -26,7 +26,7 @@ const generatePost = (postNumber)=>{
 }
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-      await queryInterface.bulkInsert("Posts",generatePost(5),{})
+      await queryInterface.bulkInsert("Posts",generatePost(2),{})
     },
 
   down: async (queryInterface, Sequelize) => {

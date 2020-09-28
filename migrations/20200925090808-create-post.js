@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       userId:{
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
@@ -17,8 +17,8 @@ module.exports = {
         },
       },
       content: {
-        allowNull: true,
-        type: Sequelize.TEXT
+        allowNull: false,
+        type: Sequelize.STRING
       },
       like: {
         defaultValue:0,
