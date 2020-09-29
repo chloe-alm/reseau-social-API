@@ -5,7 +5,8 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const router = require("./routes");
-
+const { errorHandler,notFoundHandler} = require("./middleware");
+const { ServerError } = require("./helpers/errors");
 const app = express();
 const PORT = process.env.PORT;
 
@@ -20,5 +21,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", router);
+
+app.use("*",notFoundHandler);
+app.use(errorHandler)
 
 app.listen(PORT, () => console.log(`Server started on port: ${PORT}`));

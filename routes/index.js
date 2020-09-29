@@ -14,6 +14,13 @@ router.post("/register", userController.register);
 
 // POST ROUTES
 router.post("/posts",postController.createPost);
-// router.get("/posts/:id",postController.getById);
+// router.get("/posts:id",postController.getPosts);
+//router.get("/posts:id",postController.getPostsById);
+
+router.use('*', (req, res) => {
+    response.status(404).json({
+      error: 'Oups, error !',
+    });
+  });
 
 module.exports = router;
