@@ -14,8 +14,11 @@ router.post("/register", userController.register);
 
 // POST ROUTES
 router.post("/posts",postController.createPost);
-// router.get("/posts:id",postController.getPosts);
-//router.get("/posts:id",postController.getPostsById);
+router.get("/posts",postController.getAllPost);
+router.get("/posts/:id",postController.getOnePost);
+router.patch("/posts/:id", postController.editPost);
+router.delete("/posts/:id", postController.deletePost);
+
 
 router.use('*', (req, res) => {
     response.status(404).json({
