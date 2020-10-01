@@ -103,4 +103,77 @@ module.exports = {
       },
     });
   },
+
+
+  getOneUser: async (req, res) => {
+    const UserId = req.params.id;
+    if (UserId) {
+      const user = await models.User.findOne({ where: { id: UserId } });
+      if (user) {
+        return res.status(200).json({ user: user });
+      } else
+        return res.status(404).json({ error: "404: le user n'exsiste pas" });
+    } else {
+      return res.status(404).json({ error: "404 page indisponible" });
+    }
+  },
+  getAllUser: async (req, res) => {
+    const userAll = await models.User.findAll({ limit: 10 });
+    if (userAll) {
+      res.status(200).json({ user: userAll });
+    } else {
+      res.status(500).json({ err: "500 il n'y a pas de post" });
+    }
+  },
+  editUser: async (req, res) => {
+    const getUserId = req.params.id;
+    const initialUser = await models.User.findOne({
+      attributes: ["firstName", "lastName", "email", "password", "birthday", "country","picture"],
+      where: { id: getUserId },
+    });
+
+    if (!initialUser) {
+      return res.status(404).json({ error: "ressource non trouvé" });
+    }
+
+    let inputStateUser = {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      password:req.body.password,
+      birthday: req.body.birthday,
+      country: req.body.country,
+    };
+
+    if (
+      initialUser.firstName === inputStateUser.firstName &&
+      initialUser.lastName === inputStateUser.lastName &&
+      initialUser.email === inputStateUser.email &&
+      initialUser.password === inputStateUser.password &&
+      initialUser.birthday === inputStateUser.birthday &&
+      initialUser.country === inputStateUser.country 
+    ) {
+      return res.status(400).json({ error: "pas besoin d'update, user non modifié" });
+    }
+
+    const updateUser = await models.User.update(req.body, {
+      where: { id: getUserId },
+    });
+    const changedUser = await models.User.findOne({
+      attributes: ["firstName", "lastName", "email", "password", "birthday", "country","picture"],
+      where: { id: getUserId },
+    });
+    return res.status(201).json({ updateUser, changedUser });
+  },
+  deleteUser: async (req, res) => {
+    const UserId = req.params.id;
+    const deleted = await models.User.destroy({
+      where: { id: UserId },
+    });
+    if (deleted) {
+      return res.status(200).json({ succes: `User supprimé` });
+    } else {
+      return res.status(404).json({ err: "la ressource demandée n'existe plus" });
+    }
+  }, 
 };

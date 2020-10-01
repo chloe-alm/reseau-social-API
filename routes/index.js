@@ -12,6 +12,11 @@ router.use(bodyParser.json());
 router.post("/login", userController.login);
 router.post("/register", userController.register);
 
+router.get("/register",userController.getAllUser);
+router.get("/register/:id",userController.getOneUser);
+router.patch("/register/:id", userController.editUser);
+router.delete("/register/:id",userController.deleteUser);
+
 // POST ROUTES
 router.post("/posts",postController.createPost);
 router.get("/posts",postController.getAllPost);
