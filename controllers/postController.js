@@ -1,18 +1,38 @@
 const { request } = require("express");
 const models = require("../models");
 const jwtUtils = require("../utils/jwt.utils");
+const {
+  BadRequestError,
+  ConflictError,
+  UnAuthorizedError,
+  ServerError,
+  NotFoundError,
+} = require('../helpers/errors');
+
+const { OK, CREATED } = require('../helpers/status_codes');
 
 module.exports = {
   createPost: async (req, res) => {
+    var postAuth = req.headers["authorization"];
+    var postId = jwtUtils.getUserId(postAuth);
+
+    if(postId <0){
+      throw new UnauthorizedError(
+        "Non autorisé",
+        "Vous devez être connecté pour accéder à cette ressource."
+      );
+  }
+
     const newPost = {
       content: req.body.content,
       like: req.body.like,
       picture: req.body.picture,
     };
     if (newPost.content === null) {
-      return res.status(400).json({
-        error: "missing post",
-      });
+      throw new BadRequestError(
+        'Mauvaise requête',
+        'le champs firstName doit être une chaîne de caractère'
+      );
     }
     const addPost = await models.Post.create({
       content: newPost.content,
