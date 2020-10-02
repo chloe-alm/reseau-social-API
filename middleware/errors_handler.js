@@ -1,4 +1,4 @@
-module.exports = (error, request, response, next) => {
+module.exports = (error, req, res, next) => {
     const { title } = error;
     let { description } = error;
 
@@ -7,7 +7,7 @@ module.exports = (error, request, response, next) => {
       description = 'Serveur cassé. Revenez plus tard.';
     }
 
-    response.status(status).json({
+    res.status(status).json({
       title,
       description,
     });

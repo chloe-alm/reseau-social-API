@@ -1,47 +1,35 @@
-const { request } = require("express");
 const models = require("../models");
-const jwtUtils = require("../utils/jwt.utils");
 const {
   BadRequestError,
   ConflictError,
   UnAuthorizedError,
   ServerError,
   NotFoundError,
-} = require('../helpers/errors');
-
-const { OK, CREATED } = require('../helpers/status_codes');
+} = require("../helpers/errors");
 
 module.exports = {
   createPost: async (req, res) => {
-    var postAuth = req.headers["authorization"];
-    var postId = jwtUtils.getUserId(postAuth);
-
-    if(postId <0){
-      throw new UnauthorizedError(
-        "Non autorisé",
-        "Vous devez être connecté pour accéder à cette ressource."
-      );
-  }
-
-    const newPost = {
+    const post = {
       content: req.body.content,
       like: req.body.like,
       picture: req.body.picture,
     };
-    if (newPost.content === null) {
+    console.log("azerty")
+    if (post.content == null) {
       throw new BadRequestError(
-        'Mauvaise requête',
-        'le champs firstName doit être une chaîne de caractère'
+        "Mauvaise requête",
+        "le champs content doit être une chaîne de caractère"
       );
     }
+console.log(post.content)
+console.log(req.body)
     const addPost = await models.Post.create({
-      content: newPost.content,
-      like: newPost.like,
-      picture: newPost.picture,
+      content: post.content,
+      userId: req.body.userId,
+      like: post.like,
+      picture: post.picture,
     });
-    if (addPost) {
-      return res.status(201).json(addPost);
-    }
+    res.status(201).json({addPost});
   },
   getOnePost: async (req, res) => {
     const postId = req.params.id;
@@ -71,7 +59,10 @@ module.exports = {
     });
 
     if (!initialPost) {
-      return res.status(404).json({ error: "ressource non trouvé" });
+      throw new NotFoundError(
+        "Resource not found",
+        "There is nothing to find at that url, the ID does not exist"
+      );
     }
 
     let inputStatePost = {
@@ -85,7 +76,10 @@ module.exports = {
       initialPost.like === inputStatePost.like &&
       initialPost.picture === inputStatePost.picture
     ) {
-      return res.status(400).json({ error: "pas besoin d'update, post non modifié" });
+      throw new BadRequestError(
+        "Bad Request",
+        "No need to update, you didn't modified anything"
+      );
     }
 
     const updatePost = await models.Post.update(req.body, {
@@ -103,11 +97,12 @@ module.exports = {
       where: { id: postId },
     });
     if (deleted) {
-      return res.status(200).json({ succes: `Post supprimé` });
+      return res.status(201).json({ succes: `Post post delete` });
     } else {
-      return res
-        .status(404)
-        .json({ err: "la ressource demandée n'existe plus" });
+      throw new NotFoundError(
+        "Resource not found",
+        "The requested resource does not (or no longer) exist"
+      );
     }
   },
 };

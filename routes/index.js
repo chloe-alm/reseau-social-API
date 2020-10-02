@@ -1,34 +1,40 @@
 const express = require("express");
-const bodyParser = require("body-parser");
+// const bodyParser = require("body-parser");
 const router = express.Router();
+const authenticate_Handler = require("../middleware/authenticate_Handler");
 
 const userController = require("../controllers/userController");
 const postController = require("../controllers/postController");
-const { response } = require("express");
 
-router.use(bodyParser.json());
+// router.use(bodyParser.json());
+
+router.get("/", (req, res) => {
+  res.json({ message: "Bienvenue sur ce reseau social" });
+});
 
 // USER ROUTES
+router.get("/register", authenticate_Handler, userController.getAllUser);
+router.get("/register/:id", authenticate_Handler, userController.getOneUser);
+
 router.post("/login", userController.login);
 router.post("/register", userController.register);
 
-router.get("/register",userController.getAllUser);
-router.get("/register/:id",userController.getOneUser);
-router.patch("/register/:id", userController.editUser);
-router.delete("/register/:id",userController.deleteUser);
+router.patch("/register/:id", authenticate_Handler, userController.editUser);
+router.delete("/register/:id", authenticate_Handler, userController.deleteUser);
 
 // POST ROUTES
-router.post("/posts",postController.createPost);
-router.get("/posts",postController.getAllPost);
-router.get("/posts/:id",postController.getOnePost);
-router.patch("/posts/:id", postController.editPost);
-router.delete("/posts/:id", postController.deletePost);
+router.get("/posts", authenticate_Handler, postController.getAllPost);
+router.get("/posts/:id", authenticate_Handler, postController.getOnePost);
 
+router.post("/posts", authenticate_Handler, postController.createPost);
 
-router.use('*', (req, res) => {
-    response.status(404).json({
-      error: 'Oups, error !',
-    });
-  });
+router.patch("/posts/:id", authenticate_Handler, postController.editPost);
+router.delete("/posts/:id", authenticate_Handler, postController.deletePost);
+
+// router.use('*', (req, res) => {
+//     res.status(404).json({
+//       error: 'Oups, error !',
+//     });
+//   });
 
 module.exports = router;

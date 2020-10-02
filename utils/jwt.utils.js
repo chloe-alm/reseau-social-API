@@ -1,7 +1,15 @@
-const { response } = require("express");
 const jwt = require("jsonwebtoken");
+const { UnAuthorizedError } = require("../helpers/errors");
 
 const JWT_SECRET = process.env.JWT_SECRET;
+
+const parseAuth = (authorization) => {
+  const token = authorization.replace("Bearer ", "");
+  if (token === null || token === "") {
+    throw new UnAuthorizedError("Unauthorized access", "No token found");
+  }
+  return token;
+};
 
 module.exports = {
   generateTokenForUser: (userData) => {
@@ -17,27 +25,19 @@ module.exports = {
       }
     );
   },
-  parseAuth: (authorization) => {
-    return authorization != null ? authorization.replace("Bearer", "") : null;
-  },
-  getUserId: (authorization) => {
-    let userId = -1;
-    const token = module.exports.parseAuth(authorization);
 
-    if (token) {
+  getUserId: (authorization, res) => {
+    let userId = -1;
+    const token = parseAuth(authorization);
+    try {
       const jwtToken = jwt.verify(token, JWT_SECRET);
-      if (!jwtToken) {
-        return response.status(500).json({
-            error:"token non recupéré"
-        });
-      }else {
-          userId = jwtToken.userId
-      }
-    }else {
-        response.status(401).json({
-            error:"le token n'est plus valide"
-        })
+      userId = jwtToken.userId;
+    } catch (err) {
+      throw new UnAuthorizedError(
+        "Unauthorized access",
+        "Prolem invalid token"
+      );
     }
-    return userId
+    return userId;
   },
 };

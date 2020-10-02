@@ -1,8 +1,8 @@
 const models = require("../models");
-require('express-async-errors');
 const bcrypt = require("bcrypt");
-//const { request } = require('express');
 const jwtUtils = require("../utils/jwt.utils");
+require('express-async-errors');
+
 const {
   BadRequestError,
   ConflictError,
@@ -10,7 +10,6 @@ const {
   ServerError,
   NotFoundError,
 } = require('../helpers/errors');
-const { OK, CREATED } = require('../helpers/status_codes');
 
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,15}$/;
@@ -171,7 +170,7 @@ module.exports = {
       where: { id: UserId },
     });
     if (deleted) {
-      return res.status(200).json({ succes: `User supprimé` });
+      return res.status(201).json({ succes: `User supprimé` });
     } else {
       return res.status(404).json({ err: "la ressource demandée n'existe plus" });
     }
