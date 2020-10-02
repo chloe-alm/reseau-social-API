@@ -27,22 +27,24 @@ module.exports = {
       picture,
     } = req.body;
     if (firstName === null || firstName === undefined) {
-      throw new BadRequestError('Mauvaise requête', "le champs firstName n'est pas renseigne");
+      throw new BadRequestError(
+        "Bad request", 
+        "the firstName field is not filled in");
     }
     if (!FIRSTNAME_REGEX.test(firstName)) {
       throw new BadRequestError(
-        'Mauvaise requête',
-        'le champs firstName doit être une chaîne de caractère'
-      );
+        "Bad request",
+        "the firstName field must be a string");
     }
     if (!EMAIL_REGEX.test(email)) {
-      throw new BadRequestError('Mauvaise requête', "l'email n'est pas valide");
+      throw new BadRequestError(
+        "Bad request", 
+        "Email invalid");
     }
     if (!PASSWORD_REGEX.test(password)) {
       throw new BadRequestError(
-        'Mauvaise requête',
-        'mot de passe invalide : il doit avoir une longueur de 4 à 15 caractères et inclure au moins 1 chiffre, une minuscule, une majuscule)'
-      );
+       "Bad request",
+       "the invalid password: it must be 4 to 15 characters long and include at least 1 number, lowercase, uppercase");
     } 
     const userFound = await models.User.findOne({
       attributes: ["email"],
@@ -62,8 +64,7 @@ module.exports = {
             res.status(201).json(newUser);
         } else {
           throw new ConflictError(
-            "conflict error","user already exists"
-          );
+            "conflict error","user already exists");
         }
   },
 
@@ -73,9 +74,10 @@ module.exports = {
       password: req.body.password,
     };
     if (user.email === null || user.password === null) {
-      return res.status(400).json({
-        error: "veuillez remplir tous les champs",
-      });
+      throw new BadRequestError(
+        "Bad request", 
+        "please complete all fields"
+      );
     }
 
     const match = await models.User.findOne({
@@ -85,13 +87,15 @@ module.exports = {
     });
     if (!match) {
       throw new UnAuthorizedError (
-        "UnAuthorized access","ce compte n'existe pas");
+        "UnAuthorized access",
+        "this account does not exist");
     }
 
     const resBcrypt = await bcrypt.compare(user.password, match.password);
     if (!resBcrypt) {
       throw new UnAuthorizedError(
-        "UnAuthorized access","password invalide");
+        "UnAuthorized access",
+        "password invalide");
     }
     res.status(200).json({
       token: jwtUtils.generateTokenForUser(match),
@@ -111,9 +115,13 @@ module.exports = {
       if (user) {
         return res.status(200).json({ user: user });
       } else
-        return res.status(404).json({ error: "404: le user n'exsiste pas" });
+      throw new NotFoundError(
+        "Resource not found", 
+        "404: User not found");
     } else {
-      return res.status(404).json({ error: "404 page indisponible" });
+      throw new NotFoundError(
+        "Resource not found", 
+        "404 page indisponible");
     }
   },
   getAllUser: async (req, res) => {
@@ -121,7 +129,9 @@ module.exports = {
     if (userAll) {
       res.status(200).json({ user: userAll });
     } else {
-      res.status(500).json({ err: "500 il n'y a pas de post" });
+      throw new ServerError(
+        "servor error",
+        "500 : there is not user");
     }
   },
   editUser: async (req, res) => {
@@ -132,7 +142,10 @@ module.exports = {
     });
 
     if (!initialUser) {
-      return res.status(404).json({ error: "ressource non trouvé" });
+      throw new NotFoundError(
+        "Resource not found",
+        "There is nothing to find at that url, the ID does not exist"
+      );
     }
 
     let inputStateUser = {
@@ -152,7 +165,10 @@ module.exports = {
       initialUser.birthday === inputStateUser.birthday &&
       initialUser.country === inputStateUser.country 
     ) {
-      return res.status(400).json({ error: "pas besoin d'update, user non modifié" });
+      throw new BadRequestError(
+        "Bad Request",
+        "No need to update, you didn't modified anything"
+      );
     }
 
     const updateUser = await models.User.update(req.body, {
@@ -172,7 +188,10 @@ module.exports = {
     if (deleted) {
       return res.status(201).json({ succes: `User supprimé` });
     } else {
-      return res.status(404).json({ err: "la ressource demandée n'existe plus" });
+      throw new NotFoundError(
+        "Resource not found",
+        "the requested resource no longer exists"
+      );
     }
   }, 
 };

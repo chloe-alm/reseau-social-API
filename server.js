@@ -7,7 +7,6 @@ const cors = require("cors");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const router = require("./routes");
-
 const { errorHandler, notFoundHandler } = require("./middleware");
 
 const app = express();
@@ -20,6 +19,9 @@ app.use("/", cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.get("/", (req, res) => {
+  res.json({ message: "Bienvenue sur l'api de ce reseau social" });
+});
 app.use("/api", router);
 
 app.use("*", notFoundHandler);

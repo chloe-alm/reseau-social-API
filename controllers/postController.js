@@ -17,8 +17,8 @@ module.exports = {
     console.log("azerty")
     if (post.content == null) {
       throw new BadRequestError(
-        "Mauvaise requête",
-        "le champs content doit être une chaîne de caractère"
+        "Bad request", 
+        "the content field must be a character string"
       );
     }
 console.log(post.content)
@@ -38,9 +38,14 @@ console.log(req.body)
       if (post) {
         return res.status(200).json({ post: post });
       } else
-        return res.status(404).json({ error: "404: le post n'exsiste pas" });
+      throw new NotFoundError(
+        "Resource not found", 
+        "404: Post not found");
     } else {
-      return res.status(404).json({ error: "404 page indisponible" });
+      throw new NotFoundError(
+        "Resource not found", 
+        "404 page indisponible");
+      
     }
   },
   getAllPost: async (req, res) => {
@@ -48,7 +53,9 @@ console.log(req.body)
     if (postAll) {
       res.status(200).json({ post: postAll });
     } else {
-      res.status(500).json({ err: "500 il n'y a pas de post" });
+      throw new ServerError(
+        "servor error",
+        "500 : there is not post");
     }
   },
   editPost: async (req, res) => {

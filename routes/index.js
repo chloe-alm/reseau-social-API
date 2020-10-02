@@ -1,16 +1,12 @@
 const express = require("express");
-// const bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 const router = express.Router();
 const authenticate_Handler = require("../middleware/authenticate_Handler");
 
 const userController = require("../controllers/userController");
 const postController = require("../controllers/postController");
 
-// router.use(bodyParser.json());
-
-router.get("/", (req, res) => {
-  res.json({ message: "Bienvenue sur ce reseau social" });
-});
+router.use(bodyParser.json());
 
 // USER ROUTES
 router.get("/register", authenticate_Handler, userController.getAllUser);
@@ -30,11 +26,5 @@ router.post("/posts", authenticate_Handler, postController.createPost);
 
 router.patch("/posts/:id", authenticate_Handler, postController.editPost);
 router.delete("/posts/:id", authenticate_Handler, postController.deletePost);
-
-// router.use('*', (req, res) => {
-//     res.status(404).json({
-//       error: 'Oups, error !',
-//     });
-//   });
 
 module.exports = router;
