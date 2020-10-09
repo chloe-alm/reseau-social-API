@@ -1,7 +1,7 @@
 const models = require("../models");
 const bcrypt = require("bcrypt");
 const jwtUtils = require("../utils/jwt.utils");
-require('express-async-errors');
+require("express-async-errors");
 
 const {
   BadRequestError,
@@ -9,13 +9,25 @@ const {
   UnAuthorizedError,
   ServerError,
   NotFoundError,
-} = require('../helpers/errors');
+} = require("../helpers/errors");
 
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,15}$/;
 const FIRSTNAME_REGEX = /^[a-zA-Z]{1,}$/;
 
 module.exports = {
+  getUserById: async (req, res) => {
+    console.log(req.user);
+    let user = await models.User.findByPk(req.user.userId);
+    res.status(200).json({
+      
+      user: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+      },
+    });
+  },
   register: async (req, res) => {
     const {
       firstName,
@@ -26,46 +38,50 @@ module.exports = {
       birthday,
       picture,
     } = req.body;
+    console.log(req.body);
     if (firstName === null || firstName === undefined) {
       throw new BadRequestError(
-        "Bad request", 
-        "the firstName field is not filled in");
+        "Bad request",
+        "the firstName field is not filled in"
+      );
     }
     if (!FIRSTNAME_REGEX.test(firstName)) {
       throw new BadRequestError(
         "Bad request",
-        "the firstName field must be a string");
+        "the firstName field must be a string"
+      );
     }
     if (!EMAIL_REGEX.test(email)) {
-      throw new BadRequestError(
-        "Bad request", 
-        "Email invalid");
+      throw new BadRequestError("Bad request", "Email invalid");
     }
     if (!PASSWORD_REGEX.test(password)) {
       throw new BadRequestError(
-       "Bad request",
-       "the invalid password: it must be 4 to 15 characters long and include at least 1 number, lowercase, uppercase");
-    } 
+        "Bad request",
+        "the invalid password: it must be 4 to 15 characters long and include at least 1 number, lowercase, uppercase"
+      );
+    }
     const userFound = await models.User.findOne({
       attributes: ["email"],
       where: { email },
-    })
-        if (!userFound) {
-          const bcryptedPassword = await bcrypt.hash(password, 5);
-            const newUser = await models.User.create({
-              firstName,
-              lastName,
-              email,
-              password: bcryptedPassword,
-              country,
-              birthday,
-              picture,
-            })
-            res.status(201).json(newUser);
-        } else {
-          throw new ConflictError(
-            "conflict error","user already exists");
-        }
+    });
+    if (!userFound) {
+      console.log("je cree l user");
+      const bcryptedPassword = await bcrypt.hash(password, 5);
+      const newUser = await models.User.create({
+        firstName,
+        lastName,
+        email,
+        password: bcryptedPassword,
+        country,
+        birthday,
+        picture,
+      });
+      console.log("user create");
+      res.status(201).json(newUser);
+    } else {
+      console.log("conflit");
+      throw new ConflictError("conflict error", "user already exists");
+    }
   },
 
   login: async (req, res) => {
@@ -74,10 +90,7 @@ module.exports = {
       password: req.body.password,
     };
     if (user.email === null || user.password === null) {
-      throw new BadRequestError(
-        "Bad request", 
-        "please complete all fields"
-      );
+      throw new BadRequestError("Bad request", "please complete all fields");
     }
 
     const match = await models.User.findOne({
@@ -86,16 +99,15 @@ module.exports = {
       },
     });
     if (!match) {
-      throw new UnAuthorizedError (
+      throw new UnAuthorizedError(
         "UnAuthorized access",
-        "this account does not exist");
+        "this account does not exist"
+      );
     }
 
     const resBcrypt = await bcrypt.compare(user.password, match.password);
     if (!resBcrypt) {
-      throw new UnAuthorizedError(
-        "UnAuthorized access",
-        "password invalide");
+      throw new UnAuthorizedError("UnAuthorized access", "password invalide");
     }
     res.status(200).json({
       token: jwtUtils.generateTokenForUser(match),
@@ -107,7 +119,6 @@ module.exports = {
     });
   },
 
-
   getOneUser: async (req, res) => {
     const UserId = req.params.id;
     if (UserId) {
@@ -115,13 +126,9 @@ module.exports = {
       if (user) {
         return res.status(200).json({ user: user });
       } else
-      throw new NotFoundError(
-        "Resource not found", 
-        "404: User not found");
+        throw new NotFoundError("Resource not found", "404: User not found");
     } else {
-      throw new NotFoundError(
-        "Resource not found", 
-        "404 page indisponible");
+      throw new NotFoundError("Resource not found", "404 page indisponible");
     }
   },
   getAllUser: async (req, res) => {
@@ -129,15 +136,21 @@ module.exports = {
     if (userAll) {
       res.status(200).json({ user: userAll });
     } else {
-      throw new ServerError(
-        "servor error",
-        "500 : there is not user");
+      throw new ServerError("servor error", "500 : there is not user");
     }
   },
   editUser: async (req, res) => {
     const getUserId = req.params.id;
     const initialUser = await models.User.findOne({
-      attributes: ["firstName", "lastName", "email", "password", "birthday", "country","picture"],
+      attributes: [
+        "firstName",
+        "lastName",
+        "email",
+        "password",
+        "birthday",
+        "country",
+        "picture",
+      ],
       where: { id: getUserId },
     });
 
@@ -152,7 +165,7 @@ module.exports = {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
-      password:req.body.password,
+      password: req.body.password,
       birthday: req.body.birthday,
       country: req.body.country,
     };
@@ -163,7 +176,7 @@ module.exports = {
       initialUser.email === inputStateUser.email &&
       initialUser.password === inputStateUser.password &&
       initialUser.birthday === inputStateUser.birthday &&
-      initialUser.country === inputStateUser.country 
+      initialUser.country === inputStateUser.country
     ) {
       throw new BadRequestError(
         "Bad Request",
@@ -175,7 +188,15 @@ module.exports = {
       where: { id: getUserId },
     });
     const changedUser = await models.User.findOne({
-      attributes: ["firstName", "lastName", "email", "password", "birthday", "country","picture"],
+      attributes: [
+        "firstName",
+        "lastName",
+        "email",
+        "password",
+        "birthday",
+        "country",
+        "picture",
+      ],
       where: { id: getUserId },
     });
     return res.status(201).json({ updateUser, changedUser });
@@ -193,5 +214,5 @@ module.exports = {
         "the requested resource no longer exists"
       );
     }
-  }, 
+  },
 };

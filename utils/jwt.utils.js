@@ -10,7 +10,7 @@ const parseAuth = (authorization) => {
   }
   return token;
 };
-
+//generer
 module.exports = {
   generateTokenForUser: (userData) => {
     return jwt.sign(
@@ -26,18 +26,27 @@ module.exports = {
     );
   },
 
-  getUserId: (authorization, res) => {
-    let userId = -1;
-    const token = parseAuth(authorization);
-    try {
-      const jwtToken = jwt.verify(token, JWT_SECRET);
-      userId = jwtToken.userId;
-    } catch (err) {
-      throw new UnAuthorizedError(
-        "Unauthorized access",
-        "Prolem invalid token"
+  //verifier token
+  authenticateJWT: (req, res, next) => {
+    const authHeader = req.headers.authorization;
+
+    if (authHeader) {
+      const token = authHeader.split(' ')[1];
+
+      jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) {
+          throw new ForbiddenError();
+        }
+
+        req.user = user;
+
+        next();
+      });
+    } else {
+      throw new UnauthorizedError(
+        'Accès refusé',
+        'Vous devez être connecté pour accéder à cette ressource'
       );
     }
-    return userId;
   },
 };
