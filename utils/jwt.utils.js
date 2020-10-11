@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { UnAuthorizedError } = require("../helpers/errors");
+const { UnAuthorizedError, BadRequestError } = require("../helpers/errors");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -21,7 +21,7 @@ module.exports = {
       },
       JWT_SECRET,
       {
-        expiresIn: "4h",
+        expiresIn: "10h",
       }
     );
   },
@@ -35,7 +35,9 @@ module.exports = {
 
       jwt.verify(token, JWT_SECRET, (err, user) => {
         if (err) {
-          throw new ForbiddenError();
+          throw new BadRequestError(
+            'erreur'
+          );
         }
 
         req.user = user;
@@ -49,4 +51,21 @@ module.exports = {
       );
     }
   },
-};
+  getUserId: (authorization, res) => {
+    let userId = -1;
+    const token = parseAuth(authorization);
+    try {
+      const jwtToken = jwt.verify(token, JWT_SECRET);
+      userId = jwtToken.userId;
+    } catch (err) {
+      throw new UnauthorizedError(
+        "Unauthorized access",
+        "Problem: invalid token "
+      );
+    }
+    return userId;
+  },
+  };
+
+
+

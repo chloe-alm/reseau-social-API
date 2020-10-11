@@ -1,5 +1,6 @@
 const models = require("../models");
 const {
+  
   BadRequestError,
   ConflictError,
   UnAuthorizedError,
@@ -14,15 +15,12 @@ module.exports = {
       like: req.body.like,
       picture: req.body.picture,
     };
-    console.log("azerty")
     if (post.content == null) {
       throw new BadRequestError(
         "Bad request", 
         "the content field must be a character string"
       );
     }
-console.log(post.content)
-console.log(req.body)
     const addPost = await models.Post.create({
       content: post.content,
       userId: req.body.userId,
