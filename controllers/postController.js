@@ -23,7 +23,7 @@ module.exports = {
     }
     const addPost = await models.Post.create({
       content: post.content,
-      userId: req.body.userId,
+      userId: req.user.userId,
       like: post.like,
       picture: post.picture,
     });
