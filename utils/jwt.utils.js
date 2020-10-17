@@ -36,11 +36,13 @@ module.exports = {
       jwt.verify(token, JWT_SECRET, (err, user) => {
         if (err) {
           throw new BadRequestError(
-            'erreur'
+            'erreur',
+            "token impossible a décripter"
           );
         }
 
-        req.user = user;
+        req.user = user
+        ;
 
         next();
       });

@@ -18,7 +18,7 @@ module.exports = {
       },
       content: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       like: {
         defaultValue:0,
@@ -26,7 +26,7 @@ module.exports = {
       },
       picture: {
         allowNull: true,
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,

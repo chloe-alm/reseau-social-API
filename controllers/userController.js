@@ -16,17 +16,10 @@ const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,15}$/;
 const FIRSTNAME_REGEX = /^[a-zA-Z]{1,}$/;
 
 module.exports = {
-  getUserById: async (req, res) => {
-    console.log(req.user);
+  getUserMe: async (req, res) => {
+    console.log(req.user.userId);
     let user = await models.User.findByPk(req.user.userId);
-    res.status(200).json({
-      
-      user: {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-      },
-    });
+    res.status(200).json(user);
   },
   register: async (req, res) => {
     const {

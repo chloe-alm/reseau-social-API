@@ -8,7 +8,7 @@ const postController = require("../controllers/postController");
 router.use(bodyParser.json());
 
 // USER ROUTES
-router.get("/user/me",jwt.authenticateJWT, userController.getUserById);
+router.get("/user/me",jwt.authenticateJWT, userController.getUserMe);
 router.get("/register",jwt.authenticateJWT, userController.getAllUser);
 router.get("/register/:id", jwt.authenticateJWT, userController.getOneUser);
 
