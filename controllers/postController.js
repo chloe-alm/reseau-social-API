@@ -15,10 +15,10 @@ module.exports = {
       like: req.body.like,
       picture: req.body.picture,
     };
-    if (post.content == null) {
+    if (post.content === null) {
       throw new BadRequestError(
         "Bad request", 
-        "the content field must be a character string"
+        "Input content must  be filled"
       );
     }
     const addPost = await models.Post.create({
@@ -47,7 +47,7 @@ module.exports = {
     }
   },
   getAllPost: async (req, res) => {
-    const postAll = await models.Post.findAll({ limit: 10 });
+    const postAll = await models.Post.findAll({ limit: 10, order:[["id", "DESC"]] });
     if (postAll) {
       res.status(200).json({ post: postAll });
     } else {
