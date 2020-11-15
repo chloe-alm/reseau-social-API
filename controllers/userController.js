@@ -12,7 +12,7 @@ const {
 } = require("../helpers/errors");
 
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,15}$/;
+const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,15}$/;
 const FIRSTNAME_REGEX = /^[a-zA-Z]{1,}$/;
 
 module.exports = {
@@ -32,7 +32,7 @@ module.exports = {
       picture,
     } = req.body;
     console.log(req.body);
-    if (firstName === null || firstName === undefined) {
+    if (firstName === "" ) {
       throw new BadRequestError(
         "Bad request",
         "the firstName field is not filled in"
@@ -50,7 +50,7 @@ module.exports = {
     if (!PASSWORD_REGEX.test(password)) {
       throw new BadRequestError(
         "Bad request",
-        "the invalid password: it must be 4 to 15 characters long and include at least 1 number, lowercase, uppercase"
+        "the invalid password: it must be 6 to 15 characters long and include at least 1 number, lowercase, uppercase"
       );
     }
     const userFound = await models.User.findOne({
@@ -82,7 +82,8 @@ module.exports = {
       email: req.body.email,
       password: req.body.password,
     };
-    if (user.email === null || user.password === null) {
+    
+    if (user.email === "" || user.password === "") {
       throw new BadRequestError("Bad request", "please complete all fields");
     }
 
@@ -94,7 +95,7 @@ module.exports = {
     if (!match) {
       throw new UnAuthorizedError(
         "UnAuthorized access",
-        "this account does not exist"
+        "this mail does not exist"
       );
     }
 

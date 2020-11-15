@@ -35,9 +35,9 @@ module.exports = {
 
       jwt.verify(token, JWT_SECRET, (err, user) => {
         if (err) {
-          throw new BadRequestError(
-            'erreur',
-            "token impossible a décripter"
+          throw new UnAuthorizedError(
+            'access denied',
+            "You must be logged in to access this page"
           );
         }
 
@@ -47,9 +47,9 @@ module.exports = {
         next();
       });
     } else {
-      throw new UnauthorizedError(
-        'Accès refusé',
-        'Vous devez être connecté pour accéder à cette ressource'
+      throw new BadRequestError(
+        'bad request',
+        'token is not found'
       );
     }
   },

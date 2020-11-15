@@ -30,9 +30,9 @@ module.exports = {
   
     if (!sendEmail) {
       res.status(500).json({ error: "problème de mail" });
-      console.log("Problem occured, aarrh", error);
+      
     }
     res.status(201).json({ sendEmail });
-    console.log("Email send with succes, yeah !");
+  
   },
 };

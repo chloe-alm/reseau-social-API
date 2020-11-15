@@ -18,7 +18,7 @@ module.exports = {
     if (post.content === null) {
       throw new BadRequestError(
         "Bad request", 
-        "Input content must  be filled"
+        "Input content must be filled"
       );
     }
     const addPost = await models.Post.create({
@@ -38,11 +38,11 @@ module.exports = {
       } else
       throw new NotFoundError(
         "Resource not found", 
-        "404: Post not found");
+        "Post not found");
     } else {
       throw new NotFoundError(
         "Resource not found", 
-        "404 page indisponible");
+        "Page indisponible");
       
     }
   },
@@ -53,7 +53,7 @@ module.exports = {
     } else {
       throw new ServerError(
         "servor error",
-        "500 : there is not post");
+        "There is not post");
     }
   },
   editPost: async (req, res) => {
@@ -69,8 +69,7 @@ module.exports = {
         "There is nothing to find at that url, the ID does not exist"
       );
     }
-
-    let inputStatePost = {
+      let inputStatePost = {
       content: req.body.content,
       like: req.body.like,
       picture: req.body.picture,

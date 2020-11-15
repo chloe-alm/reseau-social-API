@@ -16,8 +16,8 @@ module.exports = {
     from: "code.dev.chloe@gmail.com",
     to: "cdargelez@gmail.com",
     cc : "",
-    subject: "Sending blabla",
-    text: "That works!",
+    subject: "message",
+    text: "This is a text",
     },
     
 }
