@@ -1,4 +1,4 @@
-// const { config } = require("dotenv");
+//import mmodules
 const express = require("express");
 require("express-async-errors");
 require("dotenv").config();
@@ -9,6 +9,7 @@ const helmet = require("helmet");
 const router = require("./routes");
 const { errorHandler, notFoundHandler } = require("./middleware");
 
+//instantiate server
 const app = express();
 const PORT = process.env.PORT;
 
@@ -18,7 +19,7 @@ app.use("/", cors());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
+//config route
 app.get("/", (req, res) => {
   res.json({ message: "Bienvenue sur l'api de ce reseau social" });
 });

@@ -6,6 +6,7 @@ const userController = require("../controllers/userController");
 const postController = require("../controllers/postController");
 const mailController = require("../controllers/mailController");
 
+
 router.use(bodyParser.json());
 
 
@@ -29,6 +30,7 @@ router.post("/posts", jwt.authenticateJWT, postController.createPost);
 
 router.patch("/posts/:id", jwt.authenticateJWT, postController.editPost);
 router.delete("/posts/:id", jwt.authenticateJWT, postController.deletePost);
+
 
 
 

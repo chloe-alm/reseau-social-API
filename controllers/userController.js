@@ -12,12 +12,11 @@ const {
 } = require("../helpers/errors");
 
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,15}$/;
+const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}$/;
 const FIRSTNAME_REGEX = /^[a-zA-Z]{1,}$/;
 
 module.exports = {
   getUserMe: async (req, res) => {
-    console.log(req.user.userId);
     let user = await models.User.findByPk(req.user.userId);
     res.status(200).json(user);
   },
@@ -50,7 +49,7 @@ module.exports = {
     if (!PASSWORD_REGEX.test(password)) {
       throw new BadRequestError(
         "Bad request",
-        "the invalid password: it must be 6 to 15 characters long and include at least 1 number, lowercase, uppercase"
+        "the invalid password: it must be 8 to 15 characters long and include at least 1 number, lowercase, uppercase"
       );
     }
     const userFound = await models.User.findOne({
@@ -69,10 +68,8 @@ module.exports = {
         birthday,
         picture,
       });
-      console.log("user create");
       res.status(201).json(newUser);
     } else {
-      console.log("conflit");
       throw new ConflictError("conflict error", "user already exists");
     }
   },
@@ -159,7 +156,7 @@ module.exports = {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
-      password: req.body.password,
+      //password: req.body.password,
       birthday: req.body.birthday,
       country: req.body.country,
     };
@@ -168,7 +165,7 @@ module.exports = {
       initialUser.firstName === inputStateUser.firstName &&
       initialUser.lastName === inputStateUser.lastName &&
       initialUser.email === inputStateUser.email &&
-      initialUser.password === inputStateUser.password &&
+      //initialUser.password === inputStateUser.password &&
       initialUser.birthday === inputStateUser.birthday &&
       initialUser.country === inputStateUser.country
     ) {
