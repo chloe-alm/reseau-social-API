@@ -29,6 +29,7 @@ module.exports = {
       country,
       birthday,
       picture,
+      isAdmin,
     } = req.body;
     console.log(req.body);
     if (firstName === "" ) {
@@ -67,6 +68,7 @@ module.exports = {
         country,
         birthday,
         picture,
+        isAdmin,
       });
       res.status(201).json(newUser);
     } else {
