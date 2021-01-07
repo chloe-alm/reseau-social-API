@@ -25,6 +25,7 @@ router.post("/contact", mailController.sendContactMail);
 // POST ROUTES
 router.get("/posts", jwt.authenticateJWT, postController.getAllPost);
 router.get("/posts/:id", jwt.authenticateJWT, postController.getOnePost);
+router.get("/user-posts", jwt.authenticateJWT, postController.getUserPost);
 
 router.post("/posts", jwt.authenticateJWT, postController.createPost);
 

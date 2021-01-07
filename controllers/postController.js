@@ -46,6 +46,16 @@ module.exports = {
       
     }
   },
+   getUserPost: async (req, res) => {
+    const postAll = await models.Post.findAll({ where :{ userId: req.user.userId}, order:[["id", "DESC"]] });
+    if (postAll) {
+      res.status(200).json({ post: postAll });
+    } else {
+      throw new ServerError(
+        "servor error",
+        "There is not post");
+    }
+  },
   getAllPost: async (req, res) => {
     const postAll = await models.Post.findAll({ limit: 10, order:[["id", "DESC"]] });
     if (postAll) {
@@ -59,7 +69,7 @@ module.exports = {
   editPost: async (req, res) => {
     const getPostId = req.params.id;
     const initialPost = await models.Post.findOne({
-      attributes: ["content", "like", "picture","userId"],
+      attributes: ["content", "picture","userId"],
       where: { id: getPostId },
     });
     if(initialPost.userId!== req.user.userId){
@@ -77,13 +87,11 @@ module.exports = {
     }
       let inputStatePost = {
       content: req.body.content,
-      like: req.body.like,
       picture: req.body.picture,
     };
 
     if (
       initialPost.content === inputStatePost.content &&
-      initialPost.like === inputStatePost.like &&
       initialPost.picture === inputStatePost.picture
     ) {
       throw new BadRequestError(

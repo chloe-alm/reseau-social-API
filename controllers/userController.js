@@ -102,8 +102,9 @@ module.exports = {
       token: jwtUtils.generateTokenForUser(match),
       user: {
         firstName: match.firstName,
-        lastName: match.lastName,
         email: match.email,
+        isAdmin:match.isAdmin,
+        id: match.id,
       },
     });
   },
