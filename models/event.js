@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     userId: {type:DataTypes.INTEGER},
     content:{type:DataTypes.TEXT},
     hashtag:{type:DataTypes.STRING},
-    date: {type:DataTypes.DATE},
+   
   }, {
     sequelize,
     modelName: 'Event',

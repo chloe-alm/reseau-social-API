@@ -2,13 +2,13 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const router = express.Router();
 const jwt = require("../utils/jwt.utils")
+const isAdmin = require("../middleware/adminRole_handler")
 const userController = require("../controllers/userController");
 const postController = require("../controllers/postController");
 const mailController = require("../controllers/mailController");
-
+const eventController = require("../controllers/eventController");
 
 router.use(bodyParser.json());
-
 
 // USER ROUTES
 router.get("/user/me",jwt.authenticateJWT, userController.getUserMe);
@@ -31,7 +31,13 @@ router.post("/posts", jwt.authenticateJWT, postController.createPost);
 router.patch("/posts/:id", jwt.authenticateJWT, postController.editPost);
 router.delete("/posts/:id", jwt.authenticateJWT, postController.deletePost);
 
+//Event ROUTES
+router.get("/events", jwt.authenticateJWT, eventController.getAllEvent);
+router.get("/events/:id", jwt.authenticateJWT, eventController.getOneEvent);
 
+router.post("/events", jwt.authenticateJWT,isAdmin, eventController.createEvent);
 
+router.patch("/events/:id", jwt.authenticateJWT, eventController.editEvent);
+router.delete("/events/:id", jwt.authenticateJWT, eventController.deleteEvent);
 
 module.exports = router;

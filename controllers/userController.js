@@ -2,7 +2,6 @@ const models = require("../models");
 const bcrypt = require("bcrypt");
 const jwtUtils = require("../utils/jwt.utils");
 require("express-async-errors");
-
 const {
   BadRequestError,
   ConflictError,
@@ -31,7 +30,6 @@ module.exports = {
       picture,
       isAdmin,
     } = req.body;
-    console.log(req.body);
     if (firstName === "" ) {
       throw new BadRequestError(
         "Bad request",
@@ -59,7 +57,7 @@ module.exports = {
     });
     if (!userFound) {
       console.log("je cree l user");
-      const bcryptedPassword = await bcrypt.hash(password, 5);
+      const bcryptedPassword = await bcrypt.hash(password, 10);
       const newUser = await models.User.create({
         firstName,
         lastName,
@@ -81,11 +79,9 @@ module.exports = {
       email: req.body.email,
       password: req.body.password,
     };
-    
     if (user.email === "" || user.password === "") {
       throw new BadRequestError("Bad request", "please complete all fields");
     }
-
     const match = await models.User.findOne({
       where: {
         email: user.email,

@@ -59,9 +59,15 @@ module.exports = {
   editPost: async (req, res) => {
     const getPostId = req.params.id;
     const initialPost = await models.Post.findOne({
-      attributes: ["content", "like", "picture"],
+      attributes: ["content", "like", "picture","userId"],
       where: { id: getPostId },
     });
+    if(initialPost.userId!== req.user.userId){
+      throw new UnAuthorizedError(
+        "Acces not allowed",
+        "you must be the author of the post to edit"
+      )
+    }
 
     if (!initialPost) {
       throw new NotFoundError(
@@ -95,8 +101,19 @@ module.exports = {
     });
     return res.status(201).json({ updatePost, changedPost });
   },
+
   deletePost: async (req, res) => {
     const postId = req.params.id;
+    const initialPost = await models.Post.findOne({
+      attributes: ["userId"],
+      where: { id: postId },
+    });
+    if(initialPost.userId!== req.user.userId){
+      throw new UnAuthorizedError(
+        "Acces not allowed",
+        "you must be the author of the post to delete"
+      )
+    }
     const deleted = await models.Post.destroy({
       where: { id: postId },
     });
