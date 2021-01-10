@@ -28,7 +28,7 @@ router.get("/posts/:id", jwt.authenticateJWT, postController.getOnePost);
 router.get("/user-posts", jwt.authenticateJWT, postController.getUserPost);
 
 router.post("/posts", jwt.authenticateJWT, postController.createPost);
-
+router.patch("/posts-like/:id",jwt.authenticateJWT, postController.likePost);
 router.patch("/posts/:id", jwt.authenticateJWT, postController.editPost);
 router.delete("/posts/:id", jwt.authenticateJWT, postController.deletePost);
 

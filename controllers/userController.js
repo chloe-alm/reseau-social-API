@@ -26,7 +26,6 @@ module.exports = {
       email,
       password,
       country,
-      birthday,
       picture,
       isAdmin,
     } = req.body;
@@ -64,7 +63,6 @@ module.exports = {
         email,
         password: bcryptedPassword,
         country,
-        birthday,
         picture,
         isAdmin,
       });
@@ -137,7 +135,6 @@ module.exports = {
         "lastName",
         "email",
         "password",
-        "birthday",
         "country",
         "picture",
       ],
@@ -155,8 +152,6 @@ module.exports = {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
-      //password: req.body.password,
-      birthday: req.body.birthday,
       country: req.body.country,
     };
 
@@ -165,7 +160,6 @@ module.exports = {
       initialUser.lastName === inputStateUser.lastName &&
       initialUser.email === inputStateUser.email &&
       //initialUser.password === inputStateUser.password &&
-      initialUser.birthday === inputStateUser.birthday &&
       initialUser.country === inputStateUser.country
     ) {
       throw new BadRequestError(
@@ -183,7 +177,6 @@ module.exports = {
         "lastName",
         "email",
         "password",
-        "birthday",
         "country",
         "picture",
       ],
@@ -192,9 +185,9 @@ module.exports = {
     return res.status(201).json({ updateUser, changedUser });
   },
   deleteUser: async (req, res) => {
-    const UserId = req.params.id;
+    const getUserId = req.params.id;
     const deleted = await models.User.destroy({
-      where: { id: UserId },
+      where: { id: getUserId },
     });
     if (deleted) {
       return res.status(201).json({ succes: `User supprimé` });
@@ -203,6 +196,8 @@ module.exports = {
         "Resource not found",
         "the requested resource no longer exists"
       );
+       
     }
+  
   },
 };

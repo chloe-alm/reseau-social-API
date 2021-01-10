@@ -69,7 +69,7 @@ module.exports = {
   editPost: async (req, res) => {
     const getPostId = req.params.id;
     const initialPost = await models.Post.findOne({
-      attributes: ["content", "picture","userId"],
+      attributes: ["content","picture","userId"],
       where: { id: getPostId },
     });
     if(initialPost.userId!== req.user.userId){
@@ -78,7 +78,6 @@ module.exports = {
         "you must be the author of the post to edit"
       )
     }
-
     if (!initialPost) {
       throw new NotFoundError(
         "Resource not found",
@@ -99,7 +98,6 @@ module.exports = {
         "No need to update, you didn't modified anything"
       );
     }
-
     const updatePost = await models.Post.update(req.body, {
       where: { id: getPostId },
     });
@@ -109,6 +107,30 @@ module.exports = {
     });
     return res.status(201).json({ updatePost, changedPost });
   },
+
+
+  likePost: async (req, res) => {
+    const getPostId = req.params.id;
+  // const initialLike = await models.Post.findOne({
+  //   attributes: ["like","userId"],
+  //   where: { id: getPostId },
+  // });
+  // if (!initialLike) {
+  //   throw new NotFoundError(
+  //     "Resource not found",
+  //     "There is nothing to find at that url, the ID does not exist"
+  //   );
+  // }
+  let inputStatePost = {
+    like:req.body.like,
+  };
+  
+  const updateLikeCount = await models.Post.update(req.body,{
+    where:{id: getPostId},
+  });
+ 
+  return res.status(201).json({updateLikeCount});
+},
 
   deletePost: async (req, res) => {
     const postId = req.params.id;
