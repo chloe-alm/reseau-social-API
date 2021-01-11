@@ -38,7 +38,7 @@ router.get("/events/:id", jwt.authenticateJWT, eventController.getOneEvent);
 
 router.post("/events", jwt.authenticateJWT,isAdmin, eventController.createEvent);
 
-router.patch("/events/:id", jwt.authenticateJWT, eventController.editEvent);
+router.patch("/events/:id", jwt.authenticateJWT,isAdmin, eventController.editEvent);
 router.delete("/events/:id", jwt.authenticateJWT, eventController.deleteEvent);
 
 module.exports = router;
